@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: #000; color: #fff; font-family: 'Space Grotesk', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+.gradient-text { background: linear-gradient(to right,#FF4D4D,#FF8C40); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.gradient-bg { background: linear-gradient(to right,#FF4D4D,#FF8C40); }
+.top-bar { position:sticky; top:0; height:4px; background:rgba(255,255,255,0.08); z-index:99; }
+.top-bar-fill { height:100%; background:linear-gradient(to right,#FF4D4D,#FF8C40); animation:loadbar 1.2s ease forwards; }
+@keyframes loadbar { from{width:0} to{width:100%} }
+.hero { position:relative; padding:5rem 1.5rem 3rem; text-align:center; overflow:hidden; }
+.glow { position:absolute; top:0; left:50%; transform:translateX(-50%); width:160%; height:300px; background:rgba(255,140,64,0.1); filter:blur(80px); border-radius:50%; pointer-events:none; }
+.badge { display:inline-block; padding:0.4rem 1.2rem; border-radius:9999px; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.18em; font-weight:900; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:#FF8C40; margin-bottom:1.75rem; }
+h1 { font-size:2.2rem; font-weight:900; line-height:1.2; margin-bottom:1.25rem; }
+.sub { color:#71717a; font-size:0.9rem; line-height:1.7; font-weight:500; }
+.menu { max-width:380px; margin:0 auto; padding:0 1rem; display:flex; flex-direction:column; gap:0.75rem; }
+.btn { width:100%; padding:1.3rem 1.5rem; border-radius:1.5rem; display:flex; align-items:center; justify-content:space-between; cursor:pointer; transition:opacity .15s, transform .15s; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#fff; }
+.btn:active { transform:scale(.98); opacity:.85; }
+.btn.primary { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.18); }
+.btn.highlight { background:linear-gradient(to right,#FF4D4D,#FF8C40); border:none; color:#000; }
+.btn-label { font-size:1.05rem; font-weight:900; letter-spacing:-.01em; }
+.btn-sub { font-size:0.6rem; text-transform:uppercase; letter-spacing:.18em; font-weight:900; color:#52525b; }
+.btn.highlight .btn-sub { color:rgba(0,0,0,.45); }
+.chevron { transition:transform .3s ease; font-size:0.9rem; color:rgba(255,255,255,.25); line-height:1; }
+.btn.highlight .chevron { color:rgba(0,0,0,.25); }
+.chevron.open { transform:rotate(90deg); }
+.panel { overflow:hidden; max-height:0; transition:max-height .4s cubic-bezier(.4,0,.2,1), opacity .3s ease; opacity:0; }
+.panel.open { max-height:2400px; opacity:1; }
+.panel-inner { padding:1rem 0.25rem 2rem; display:flex; flex-direction:column; gap:0.75rem; }
+.card { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:1.5rem; padding:1.25rem 1.5rem; }
+.row { display:flex; gap:1rem; align-items:center; }
+.icon-box { padding:.75rem; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:.875rem; flex-shrink:0; }
+.label-sm { font-size:0.6rem; font-weight:900; color:#52525b; text-transform:uppercase; letter-spacing:.15em; margin-bottom:.2rem; }
+.label-lg { font-size:1.05rem; font-weight:900; }
+.rule-head { font-weight:900; margin-bottom:.5rem; font-size:1rem; }
+.rule-body { color:#a1a1aa; font-size:.9rem; line-height:1.6; }
+.reward-row { display:flex; gap:1rem; align-items:center; }
+.reward-img { width:5.5rem; height:5.5rem; object-fit:cover; border-radius:.875rem; flex-shrink:0; }
+.reward-count { color:#FF8C40; font-weight:900; font-size:1.4rem; margin-bottom:.2rem; }
+.reward-name { font-weight:900; font-size:.95rem; margin-bottom:.15rem; }
+.reward-desc { font-size:.72rem; color:#52525b; font-weight:700; }
+.family-wrap { background:linear-gradient(to right,#FF4D4D,#FF8C40); padding:3px; border-radius:2rem; }
+.family-inner { background:#000; border-radius:calc(2rem - 3px); padding:2rem; text-align:center; }
+.family-grid { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; margin-top:1.5rem; }
+.fcard { padding:1rem; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:.875rem; }
+.fcard-sub { font-size:.65rem; color:#52525b; margin-bottom:.3rem; }
+.fcard-val { font-size:.95rem; font-weight:900; }
+.calc-input { width:100%; background:rgba(0,0,0,.6); border:2px solid rgba(255,140,64,.3); border-radius:1.25rem; padding:1.25rem 1.5rem; font-size:2.5rem; font-weight:900; color:#FF8C40; outline:none; font-family:'Space Grotesk',sans-serif; transition:border-color .2s; -moz-appearance:textfield; }
+.calc-input:focus { border-color:#FF8C40; }
+.calc-input::-webkit-outer-spin-button,.calc-input::-webkit-inner-spin-button { -webkit-appearance:none; }
+.result { margin-top:1.75rem; display:none; flex-direction:column; gap:1.5rem; }
+.result-row { display:flex; justify-content:space-between; align-items:center; }
+.result-label { color:#a1a1aa; font-weight:700; font-size:.9rem; }
+.result-val { font-weight:900; font-size:1rem; text-align:right; }
+.result-money { color:#FF8C40; font-size:2rem; font-weight:900; }
+.prog-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:.75rem; }
+.prog-diff { font-size:.85rem; color:#52525b; font-weight:700; }
+.prog-name { font-size:.8rem; color:#fff; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
+.prog-track { height:.875rem; background:rgba(255,255,255,.1); border-radius:9999px; overflow:hidden; }
+.prog-fill { height:100%; background:linear-gradient(to right,#FF4D4D,#FF8C40); border-radius:9999px; transition:width .5s cubic-bezier(.4,0,.2,1); }
+.footer { margin-top:5rem; padding:0 1.5rem 4rem; text-align:center; }
+.footer-logo { font-size:1.8rem; font-weight:900; opacity:.08; margin-bottom:1.25rem; }
+.footer-sub { font-size:.65rem; font-weight:700; color:#3f3f46; text-transform:uppercase; letter-spacing:.28em; line-height:1.8; }
+</style>
+</head>
+<body>
+<div class="top-bar"><div class="top-bar-fill"></div></div>
+
+<section class="hero">
+  <div class="glow"></div>
+  <span class="badge">Team X Presents</span>
+  <h1>貳壹22 <span class="gradient-text">祝福傳遞者</span></h1>
+  <p class="sub">這不只是一張入場券，更是一份支持的行動。<br>讓我們一起玩得開心，在祝福中看見影響力。</p>
+</section>
+
+<div class="menu">
+
+  <div>
+    <button class="btn primary" onclick="tog('mission',this)">
+      <div class="row" style="gap:.875rem">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF8C40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
+        <div><div class="btn-label">【領取任務】</div><div class="btn-sub">Registration</div></div>
+      </div>
+      <span class="chevron">❯</span>
+    </button>
+    <div class="panel" id="p-mission">
+      <div class="panel-inner">
+        <div class="card">
+          <div class="row"><div class="icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF8C40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="label-sm">地點</div><div class="label-lg">Kid's Heaven (Fight.k)</div></div></div>
+        </div>
+        <div class="card">
+          <div class="row"><div class="icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF8C40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="label-sm">時間</div><div class="label-lg">每週六 聚會後</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button class="btn" onclick="tog('rules',this)">
+      <div class="row" style="gap:.875rem">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF8C40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+        <div><div class="btn-label">【解鎖攻略】</div><div class="btn-sub">Guide & Rules</div></div>
+      </div>
+      <span class="chevron">❯</span>
+    </button>
+    <div class="panel" id="p-rules">
+      <div class="panel-inner">
+        <div class="card"><div class="rule-head"><span class="gradient-text">01</span> 新手啟動</div><div class="rule-body">買 1 張票即可啟動，積分 +1。</div></div>
+        <div class="card"><div class="rule-head"><span class="gradient-text">02</span> 任務押金</div><div class="rule-body">額外領取需支付 $100/張押金，隔週結算後退還。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button class="btn" onclick="tog('milestones',this)">
+      <div class="row" style="gap:.875rem">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF8C40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        <div><div class="btn-label">【個人榮譽里程碑】</div><div class="btn-sub">Honor Rewards</div></div>
+      </div>
+      <span class="chevron">❯</span>
+    </button>
+    <div class="panel" id="p-milestones">
+      <div class="panel-inner">
+        <div class="card reward-row">
+          <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?q=80&w=200" class="reward-img">
+          <div>
+            <div class="reward-count">10 張</div>
+            <div class="reward-name">大桶哈根達斯</div>
+            <div class="reward-desc">精緻的冰淇淋</div>
+          </div>
+        </div>
+        <div class="card reward-row">
+          <img src="https://images.unsplash.com/photo-1594908900066-3f47337549d8?q=80&w=200" class="reward-img">
+          <div>
+            <div class="reward-count">20 張</div>
+            <div class="reward-name">電影票 × 2 張</div>
+            <div class="reward-desc">高級餐廳美食</div>
+          </div>
+        </div>
+        <div class="card reward-row">
+          <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=200" class="reward-img">
+          <div>
+            <div class="reward-count">30 張</div>
+            <div class="reward-name">王品 $1000 禮券</div>
+            <div class="reward-desc">電影票根或戲院</div>
+          </div>
+        </div>
+        <div class="card reward-row">
+          <img src="https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?q=80&w=200" class="reward-img">
+          <div>
+            <div class="reward-count">40 張</div>
+            <div class="reward-name">旭集餐卷 × 1 張</div>
+            <div class="reward-desc">日式料理</div>
+          </div>
+        </div>
+        <div class="card reward-row">
+          <img src="https://images.unsplash.com/photo-1589003077984-894e133dabab?q=80&w=200" class="reward-img">
+          <div>
+            <div class="reward-count">130 張</div>
+            <div class="reward-name">Marshall 音響</div>
+            <div class="reward-desc">復古小台藍牙喇叭</div>
+          </div>
+        </div>
+        <div class="card reward-row">
+          <img src="https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?q=80&w=200" class="reward-img">
+          <div>
+            <div class="reward-count">150 張</div>
+            <div class="reward-name">AirPods 4</div>
+            <div class="reward-desc">白色無線藍牙耳機</div>
+          </div>
+        </div>
+        <div class="card reward-row">
+          <img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?q=80&w=400" class="reward-img">
+          <div>
+            <div class="reward-count">1500 張</div>
+            <div class="reward-name">iPhone 17 Pro Max</div>
+            <div class="reward-desc">旗艦智慧型手機</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button class="btn" onclick="tog('family',this)">
+      <div class="row" style="gap:.875rem">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF8C40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div><div class="btn-label">【Family 團體戰力】</div><div class="btn-sub">Group Rewards</div></div>
+      </div>
+      <span class="chevron">❯</span>
+    </button>
+    <div class="panel" id="p-family">
+      <div class="panel-inner">
+        <div class="family-wrap">
+          <div class="family-inner">
+            <div style="font-size:.62rem; font-weight:900; color:#52525b; text-transform:uppercase; letter-spacing:.18em; margin-bottom:1rem;">每賣出一張票</div>
+            <div style="font-size:3.5rem; font-weight:900; margin-bottom:0;" class="gradient-text">$20 美食金</div>
+            <div class="family-grid">
+              <div class="fcard"><div class="fcard-sub">6/6 第一波</div><div class="fcard-val">結算完成</div></div>
+              <div class="fcard"><div class="fcard-sub">6/27 第二波</div><div class="fcard-val">結算完成</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button class="btn highlight" onclick="tog('calc',this)">
+      <div class="row" style="gap:.875rem">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/><path d="M9 7h6"/><path d="M9 11h6"/><path d="M9 15h3"/></svg>
+        <div><div class="btn-label">【夢想試算器】</div><div class="btn-sub">Goal Calculator</div></div>
+      </div>
+      <span class="chevron">❯</span>
+    </button>
+    <div class="panel" id="p-calc">
+      <div class="panel-inner">
+        <div class="card" style="background:rgba(255,255,255,.04); padding:2rem;">
+          <div style="font-size:.62rem; font-weight:900; color:#52525b; text-transform:uppercase; letter-spacing:.18em; margin-bottom:1rem;">預計賣出張數</div>
+          <input type="number" inputmode="numeric" placeholder="輸入張數" class="calc-input" oninput="calc(this.value)">
+          <div class="result" id="result">
+            <div class="result-row"><span class="result-label">最高獎項</span><span class="result-val" id="rTop"></span></div>
+            <div class="result-row"><span class="result-label">美食金</span><span class="result-money" id="rMoney"></span></div>
+            <div id="rProg">
+              <div class="prog-header"><span class="prog-diff" id="rDiff"></span><span class="prog-name" id="rNext"></span></div>
+              <div class="prog-track"><div class="prog-fill" id="rBar" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-logo">TEAM X · 2122</div>
+  <div class="footer-sub">讓美好的聲音，傳遞到城市每個角落</div>
+</div>
+
+// need to be Edit
+<script>
+const REWARDS=[
+  {count:10,name:'大桶哈根達斯'},
+  {count:20,name:'電影票 × 2 張'},
+  {count:30,name:'王品 $1000 禮券'},
+  {count:40,name:'旭集餐卷 × 1 張'},
+  {count:130,name:'Marshall 音響'},
+  {count:150,name:'AirPods 4'},
+  {count:1500,name:'iPhone 17 Pro Max'}
+];
+function tog(id,btn){
+  const p=document.getElementById('p-'+id);
+  const c=btn.querySelector('.chevron');
+  const o=p.classList.contains('open');
+  p.classList.toggle('open',!o);
+  c.classList.toggle('open',!o);
+  if(!o) setTimeout(()=>p.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+}
+function calc(v){
+  const n=parseInt(v)||0;
+  const el=document.getElementById('result');
+  if(n<=0){el.style.display='none';return;}
+  el.style.display='flex';
+  let rem=n,claimed=[];
+  [...REWARDS].sort((a,b)=>b.count-a.count).forEach(r=>{if(rem>=r.count){claimed.push(r.name);rem-=r.count;}});
+  document.getElementById('rTop').textContent=claimed[0]||'加油！差一點就達成首個目標';
+  document.getElementById('rMoney').textContent='$'+(n*20).toLocaleString();
+  const next=REWARDS.find(r=>r.count>n);
+  const prog=document.getElementById('rProg');
+  if(next){
+    document.getElementById('rDiff').textContent='再賣 '+(next.count-n)+' 張解鎖';
+    document.getElementById('rNext').textContent=next.name;
+    document.getElementById('rBar').style.width=Math.round(n/next.count*100)+'%';
+    prog.style.display='block';
+  } else { prog.style.display='none'; }
+}
+</script>
+</body>
+</html>
